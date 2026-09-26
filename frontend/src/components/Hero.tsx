@@ -1,147 +1,234 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowDown, ArrowRight, ChevronDown } from "lucide-react";
 import { scrollToId } from "@/lib/scroll";
-import { EASE, LightSweep } from "./reveal";
-import { IMAGES } from "@/data/content";
-
-const LETTERS = "AUREXA".split("");
+import { EASE } from "./reveal";
+import heroBg from "@/assets/aurexahero2.jpg";
 
 export const Hero = () => {
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const imgY = useTransform(scrollYProgress, [0, 1], ["0%", "14%"]);
-  const fade = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  const imgScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.06]);
+  const imgY = useTransform(scrollYProgress, [0, 1], ["0%", "8%"]);
 
   return (
-    <section ref={ref} data-testid="hero-section" className="relative h-[100svh] overflow-hidden bg-ink">
-      <motion.div style={{ y: imgY }} className="absolute inset-0">
-        <motion.img
-          src={IMAGES.hero}
-          alt="Classical oil painting from the AUREXA collection"
-          fetchPriority="high"
-          decoding="async"
-          className="h-full w-full object-cover"
-          initial={{ scale: 1.18 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 2.4, ease: EASE, delay: 0.5 }}
-        />
-      </motion.div>
-      <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-ink via-ink/35 to-ink/55" />
-      <div aria-hidden className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(7,16,29,0.42),transparent_62%)]" />
-
-      <motion.div
-        aria-hidden
-        className="absolute inset-y-0 left-0 z-20 w-1/2 bg-ink"
-        initial={{ x: 0 }}
-        animate={{ x: "-101%" }}
-        transition={{ duration: 1.15, ease: EASE, delay: 0.45 }}
-      />
-      <motion.div
-        aria-hidden
-        className="absolute inset-y-0 right-0 z-20 w-1/2 bg-ink"
-        initial={{ x: 0 }}
-        animate={{ x: "101%" }}
-        transition={{ duration: 1.15, ease: EASE, delay: 0.45 }}
-      />
-      <motion.div
-        aria-hidden
-        className="absolute inset-y-0 left-1/2 z-20 w-px bg-champagne/70"
-        initial={{ scaleY: 1, opacity: 1 }}
-        animate={{ scaleY: 0, opacity: 0 }}
-        transition={{ duration: 0.9, ease: EASE, delay: 1.1 }}
-        style={{ transformOrigin: "center" }}
-      />
-
-      <motion.div
-        style={{ opacity: fade }}
-        className="relative z-30 flex h-full flex-col items-center justify-center px-6 text-center"
+    <div ref={containerRef} data-testid="hero-section" className="relative bg-ink">
+      {/* =========================================================================
+          SCREEN 1: COVER / INTRO SPLASH SECTION (Aurora Art & Sculpture Centered)
+          ========================================================================= */}
+      <section
+        id="hero-intro"
+        data-testid="hero-intro-screen"
+        className="relative flex h-[100svh] w-full flex-col justify-between items-center overflow-hidden px-6 text-center select-none"
       >
-        <motion.p
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: EASE, delay: 1.25 }}
-          className="mb-6 text-[10px] uppercase tracking-[0.5em] text-champagne md:text-[11px]"
-        >
-          Private Exhibition &amp; Auction
-        </motion.p>
-
-        <LightSweep delay={2.2}>
-          <h1 className="font-serif text-[17vw] font-light leading-[0.95] tracking-[0.1em] text-ivory md:text-[12vw]">
-            {LETTERS.map((l, i) => (
-              <span key={i} className="inline-block overflow-hidden pb-[0.06em] -mb-[0.06em]">
-                <motion.span
-                  className="inline-block"
-                  initial={{ y: "112%" }}
-                  animate={{ y: 0 }}
-                  transition={{ duration: 1, ease: EASE, delay: 1 + i * 0.07 }}
-                >
-                  {l}
-                </motion.span>
-              </span>
-            ))}
-          </h1>
-        </LightSweep>
-
+        {/* Fullscreen Background Artwork */}
         <motion.div
-          aria-hidden
-          className="mt-8 h-px bg-champagne"
-          initial={{ width: 0 }}
-          animate={{ width: 160 }}
-          transition={{ duration: 1.1, ease: EASE, delay: 1.85 }}
-        />
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: EASE, delay: 2 }}
-          className="mt-6 text-[11px] uppercase tracking-[0.55em] text-ivory/85 md:text-xs"
+          style={{ scale: imgScale, y: imgY }}
+          className="absolute inset-0 z-0"
         >
-          The Art of the Exceptional
-        </motion.p>
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.9, delay: 2.2 }}
-          className="mt-3 text-[10px] uppercase tracking-[0.4em] text-ivory/45"
-        >
-          MMXXVI — By Invitation Only
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: EASE, delay: 2.4 }}
-          className="mt-12 flex flex-col items-center gap-6 sm:flex-row sm:gap-10"
-        >
-          <button
-            data-testid="hero-enter-collection-btn"
-            onClick={() => scrollToId("collection")}
-            className="border border-ivory/30 px-9 py-4 text-[10px] uppercase tracking-[0.35em] text-ivory transition-colors duration-500 hover:bg-ivory hover:text-ink"
-          >
-            Enter the Collection
-          </button>
-          <button
-            data-testid="hero-request-invitation-btn"
-            onClick={() => scrollToId("access")}
-            className="text-[10px] uppercase tracking-[0.35em] text-ivory/70 underline decoration-champagne/50 underline-offset-8 transition-colors duration-300 hover:text-ivory hover:decoration-champagne"
-          >
-            Request Invitation
-          </button>
+          <img
+            src={heroBg}
+            alt="Aurora Art & Sculpture Gallery"
+            fetchPriority="high"
+            decoding="async"
+            className="h-full w-full object-cover object-center filter brightness-[0.95]"
+          />
+          {/* Subtle Ambient Vignette & Lighting Gradients */}
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-ink/40"
+          />
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-radial-vignette opacity-60"
+            style={{
+              background:
+                "radial-gradient(circle at center, transparent 35%, rgba(7, 16, 29, 0.75) 100%)",
+            }}
+          />
         </motion.div>
-      </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2.8, duration: 1 }}
-        className="absolute bottom-8 left-1/2 z-30 flex -translate-x-1/2 flex-col items-center gap-3"
+        {/* Top spacer to perfectly center the logo */}
+        <div className="relative z-10 pt-16 md:pt-20 opacity-0 pointer-events-none">
+          <span className="text-[10px] tracking-[0.4em]">AUREXA</span>
+        </div>
+
+        {/* Center: Radiant AUREXA Logo with Sparkle in 'X' & ART & SCULPTURE */}
+        <div className="relative z-10 flex flex-col items-center justify-center max-w-4xl mx-auto my-auto">
+          {/* Main Brand Title with Sparkling X */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92, y: 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 1.4, ease: EASE }}
+            className="relative"
+          >
+            <h1 className="font-cinzel text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-normal tracking-[0.24em] pl-[0.24em] text-[#F1ECE1] drop-shadow-[0_4px_28px_rgba(0,0,0,0.85)] flex items-center justify-center">
+              AUREXA
+            </h1>
+
+          </motion.div>
+
+          {/* Subtitle: ART & SCULPTURE */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, ease: EASE, delay: 0.5 }}
+            className="mt-4 sm:mt-6 flex items-center justify-center gap-3 sm:gap-6 w-full"
+          >
+            <div className="h-px flex-1 max-w-[40px] sm:max-w-[70px] bg-gradient-to-r from-transparent to-[#F1ECE1]/60" />
+            <p className="font-sans text-[10px] sm:text-xs md:text-sm uppercase tracking-[0.55em] text-[#F1ECE1]/90 font-light pl-[0.55em]">
+              ART &amp; SCULPTURE
+            </p>
+            <div className="h-px flex-1 max-w-[40px] sm:max-w-[70px] bg-gradient-to-l from-transparent to-[#F1ECE1]/60" />
+          </motion.div>
+        </div>
+
+        {/* Bottom Cue: SCROLL TO EXPLORE with Down Arrow */}
+        <motion.button
+          onClick={() => scrollToId("hero-main")}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: EASE, delay: 0.9 }}
+          className="group relative z-10 mb-10 flex flex-col items-center gap-3.5 focus:outline-none transition-transform hover:scale-105"
+          aria-label="Scroll to explore main hero"
+        >
+          <span className="font-sans text-[9px] sm:text-[10px] uppercase tracking-[0.45em] text-ivory/60 transition-colors duration-300 group-hover:text-champagne pl-[0.45em]">
+            SCROLL TO EXPLORE
+          </span>
+          <div className="relative flex flex-col items-center">
+            {/* Animated vertical guide line */}
+            <motion.div
+              className="h-10 sm:h-12 w-[1.5px] bg-gradient-to-b from-champagne/80 via-champagne/40 to-transparent"
+              animate={{ scaleY: [0.7, 1.2, 0.7], y: [0, 5, 0] }}
+              transition={{
+                repeat: Infinity,
+                duration: 2.4,
+                ease: "easeInOut",
+              }}
+            />
+            <ArrowDown className="h-3 w-3 -mt-1 text-champagne/80 transition-transform duration-300 group-hover:translate-y-1" />
+          </div>
+        </motion.button>
+      </section>
+
+      {/* =========================================================================
+          SCREEN 2: MAIN HERO / ART BEYOND THE ORDINARY
+          ========================================================================= */}
+      <section
+        id="hero-main"
+        data-testid="hero-main-screen"
+        className="relative flex min-h-[100svh] w-full flex-col justify-between overflow-hidden bg-ink pt-28 pb-12 px-6 sm:px-12 md:px-16 lg:px-24"
       >
-        <span className="text-[9px] uppercase tracking-[0.45em] text-ivory/40">Scroll</span>
-        <motion.span
-          className="block h-12 w-px origin-top bg-champagne/60"
-          animate={{ scaleY: [1, 0.35, 1] }}
-          transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
-        />
-      </motion.div>
-    </section>
+        {/* Gallery Background continuing the atmospheric scene */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src={heroBg}
+            alt="Art Beyond the Ordinary"
+            fetchPriority="low"
+            decoding="async"
+            className="h-full w-full object-cover object-center filter brightness-[0.88]"
+          />
+          {/* Left-to-Right Dark Gradient Mask for pristine text contrast */}
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/75 to-ink/20 lg:via-ink/65 lg:to-transparent"
+          />
+          {/* Subtle Top & Bottom Blends */}
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-b from-ink/60 via-transparent to-ink"
+          />
+        </div>
+
+        {/* Top spacer for breathing room below the sticky/fixed Navbar */}
+        <div className="relative z-10 h-4" />
+
+        {/* Left-Aligned Hero Content Block (Matching Screen 2 in Reference) */}
+        <div className="relative z-10 max-w-2xl my-auto">
+          {/* Eyebrow */}
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: EASE }}
+            className="mb-4 text-[10.5px] sm:text-xs uppercase tracking-[0.45em] text-champagne font-medium"
+          >
+            EXTRAORDINARY ART, TIMELESS BEAUTY.
+          </motion.p>
+
+          {/* Main Display Headline */}
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.9, ease: EASE, delay: 0.15 }}
+            className="font-cinzel text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light tracking-[0.06em] text-ivory leading-[1.08] mb-6 drop-shadow-md"
+          >
+            ART BEYOND<br />
+            THE ORDINARY
+          </motion.h2>
+
+          {/* Paragraph Description */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: EASE, delay: 0.3 }}
+            className="text-sm sm:text-base text-ivory/80 max-w-lg font-sans font-light leading-relaxed mb-9"
+          >
+            Discover a curated collection of exceptional artworks and sculptures
+            from around the world.
+          </motion.p>
+
+          {/* Primary CTA Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: EASE, delay: 0.45 }}
+            className="flex items-center gap-6"
+          >
+            <button
+              data-testid="hero-enter-collection-btn"
+              onClick={() => scrollToId("collection")}
+              className="group relative inline-flex items-center gap-4 border border-ivory/40 hover:border-champagne bg-ink/30 hover:bg-champagne/15 px-8 py-3.5 text-[10.5px] uppercase tracking-[0.32em] text-ivory transition-all duration-300 backdrop-blur-sm"
+            >
+              <span>EXPLORE COLLECTION</span>
+              <ArrowRight className="h-3.5 w-3.5 text-champagne transition-transform duration-300 group-hover:translate-x-1.5" />
+            </button>
+          </motion.div>
+        </div>
+
+        {/* Bottom Center Indicator: Mouse / Chevron */}
+        <div className="relative z-10 flex justify-center pt-8">
+          <motion.button
+            onClick={() => scrollToId("collection")}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="group flex flex-col items-center gap-2 p-2 text-ivory/50 transition-colors hover:text-champagne focus:outline-none"
+            aria-label="Scroll down to collection"
+          >
+            <div className="flex h-8 w-5 items-start justify-center rounded-full border border-ivory/30 p-1 group-hover:border-champagne transition-colors">
+              <motion.div
+                className="h-1.5 w-1 rounded-full bg-champagne"
+                animate={{ y: [0, 8, 0], opacity: [1, 0.4, 1] }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 1.8,
+                  ease: "easeInOut",
+                }}
+              />
+            </div>
+            <ChevronDown className="h-3.5 w-3.5 text-ivory/40 group-hover:text-champagne transition-colors" />
+          </motion.button>
+        </div>
+      </section>
+    </div>
   );
 };

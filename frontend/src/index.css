@@ -55,6 +55,26 @@ html.lenis body {
 }
 
 /* Editorial marquee */
+.text-gold-gradient {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F5E6CA 30%, #D4AF37 70%, #A37F26 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gold-subtle {
+  background: linear-gradient(180deg, #F3EDE2 0%, #D8C7AE 60%, #B99A68 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-flare {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(255, 250, 235, 1) 0%, rgba(245, 215, 130, 0.9) 25%, rgba(212, 175, 55, 0.4) 60%, transparent 80%);
+  filter: blur(1px);
+}
+
 .marquee-track {
   display: flex;
   width: max-content;
